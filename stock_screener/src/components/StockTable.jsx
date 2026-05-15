@@ -1,6 +1,14 @@
 import React from 'react'
 
 const StockTable = ({stocks}) => {
+  if (!stocks || !stocks.length) {
+    return (
+      <div className='overflow-x-auto rounded-xl border border-zinc-800'>
+        <p className="text-white">No stocks found</p>
+      </div>
+    );
+  }
+
   return (
     <div className='overflow-x-auto rounded-xl border border-zinc-800'>
         <table className='w-full border-collapse text-left'>
@@ -12,7 +20,9 @@ const StockTable = ({stocks}) => {
                 </tr>
             </thead>
             <tbody>
-                {stocks.map((stk)=>(
+                {[...stocks]
+                    .sort((a,b)=>b.price-a.price)
+                    .map((stk)=>(
                     <tr key={stk.symbol} className='border-b border-zinc-800 hover:bg-zinc-800/40'>
                         <td className='p-4 font-semibold text-white'> 
                             {stk.symbol}
