@@ -1,0 +1,35 @@
+import React from 'react'
+
+const StockTable = ({stocks}) => {
+  return (
+    <div className='overflow-x-auto rounded-xl border border-zinc-800'>
+        <table className='w-full border-collapse text-left'>
+            <thead>
+                <tr className='bg-zinc-800 text-zinc-200'>
+                    <th className='p-4'>Symbol</th>
+                    <th className='p-4'>Price</th>
+                    <th className='p-4'>Change %</th>
+                </tr>
+            </thead>
+            <tbody>
+                {stocks.map((stk)=>(
+                    <tr key={stk.symbol} className='border-b border-zinc-800 hover:bg-zinc-800/40'>
+                        <td className='p-4 font-semibold text-white'> 
+                            {stk.symbol}
+                        </td>
+                        <td className='p-4 text-white'>
+                            {stk.price == null ? '-' : `$${stk.price.toFixed(2)}`}
+                        </td>
+                        <td className={`p-4 font-medium ${stk.change >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {stk.change == null ? '-' : `${stk.change.toFixed(2)}%`}
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+      
+    </div>
+  )
+}
+
+export default StockTable
