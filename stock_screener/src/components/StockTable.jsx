@@ -21,7 +21,9 @@ const StockTable = ({stocks}) => {
                 {[...stocks]
                     .sort((a,b)=>b.price-a.price)
                     .map((stk)=>(
-                    <tr key={stk.symbol} className='border-b border-zinc-800 hover:bg-zinc-800/40'>
+                    <tr key={stk.symbol} className={`border-b border-zinc-800 transition-all duration-500 
+                        ${stk.price > stk.prevPrice ? "bg-red-900/20": ""} hover:bg-zinc-800/40
+                    `}>
                         <td className='p-4 font-semibold text-white'> 
                             {stk.symbol}
                         </td>
@@ -29,7 +31,7 @@ const StockTable = ({stocks}) => {
                             {stk.price == null ? '-' : `$${stk.price.toFixed(2)}`}
                         </td>
                         <td className={`p-4 font-medium ${stk.change >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                            {stk.change == null ? '-' : `${stk.change.toFixed(2)}%`}
+                            {stk.change == null ? '-' : `${stk.change > 0 ? "↑ " : "↓ " } ${stk.change.toFixed(2)}%`}
                         </td>
                     </tr>
                 ))}

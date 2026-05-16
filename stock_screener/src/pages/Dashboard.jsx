@@ -16,6 +16,8 @@ const Dashboard = () => {
         return{
             symbol,
             price: data.c,
+            prevPrice:
+                stk.find(s=>s.symbol===symbol)?.price || data.c,
             change: data.dp,
         };
     }, []);
@@ -29,6 +31,7 @@ const Dashboard = () => {
                     return{
                         symbol: s.symbol,
                         price: data.c,
+                        prevPrice: stk.price,
                         change: data.dp
                     }
                 })
@@ -87,7 +90,7 @@ const Dashboard = () => {
 
         <div className='p-6'>
             <SearchBar onSearch={handleSearch} />
-            <p className='text-zinc-400 mb-4'>Updated: {lastupd || "Never"}</p>
+            <p className='text-zinc-400 mb-4 text-sm'>Updated: <span className='font-medium text-white ml-2'/>{lastupd || "Never"}</p>
             <StockTable stocks={stk}/>
         </div>
     </div>
