@@ -1,5 +1,3 @@
-import React from 'react'
-
 const StockTable = ({stocks}) => {
   if (!stocks || !stocks.length) {
     return (
