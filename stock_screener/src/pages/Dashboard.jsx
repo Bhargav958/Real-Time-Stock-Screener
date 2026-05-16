@@ -2,6 +2,7 @@ import {useCallback, useEffect, useState} from 'react'
 import Navbar from '../components/Navbar'
 import StockTable from '../components/StockTable'
 import SearchBar from '../components/SearchBar'
+import StockModal from '../components/StockModel'
 import { getStockQuote } from '../services/stockApi'
 
 const defaultStocks =["AAPL","TSLA","MSFT","NVDA"];
@@ -10,6 +11,7 @@ const Dashboard = () => {
     const [stk, setStk] = useState([]);
     // const [loading, setLoading] = useState(true);
     const [lastupd, setLastupd] = useState(null);
+    const [selected, setSelected] = useState(null);
 
     const fetchStock = useCallback(async(symbol)=>{
         const data = await getStockQuote(symbol);
@@ -90,8 +92,9 @@ const Dashboard = () => {
 
         <div className='p-6'>
             <SearchBar onSearch={handleSearch} />
-            <p className='text-zinc-400 mb-4 text-sm'>Updated: <span className='font-medium text-white ml-2'/>{lastupd || "Never"}</p>
-            <StockTable stocks={stk}/>
+            <p className='text-zinc-400 mb-4 text-sm'>Updated: <span className='font-medium text-white ml-2'>{lastupd || "Never"}</span></p>
+            <StockTable stocks={stk} onSelect={setSelected} />
+            <StockModal stock={selected} onClose={()=>setSelected(null)}/>
         </div>
     </div>
   )

@@ -1,4 +1,4 @@
-const StockTable = ({stocks}) => {
+const StockTable = ({stocks, onSelect}) => {
   if (!stocks || !stocks.length) {
     return (
       <div className='overflow-x-auto rounded-xl border border-zinc-800'>
@@ -21,9 +21,10 @@ const StockTable = ({stocks}) => {
                 {[...stocks]
                     .sort((a,b)=>b.price-a.price)
                     .map((stk)=>(
-                    <tr key={stk.symbol} className={`border-b border-zinc-800 transition-all duration-500 
-                        ${stk.price > stk.prevPrice ? "bg-red-900/20": ""} hover:bg-zinc-800/40
-                    `}>
+                    <tr key={stk.symbol}
+                        className={`cursor-pointer hover:scale-105 transition border-b border-zinc-800 transition-all duration-500 ${stk.price > stk.prevPrice ? "bg-red-900/20" : ""} hover:bg-zinc-800/40`}
+                        onClick={() => onSelect(stk)}
+                    >
                         <td className='p-4 font-semibold text-white'> 
                             {stk.symbol}
                         </td>
