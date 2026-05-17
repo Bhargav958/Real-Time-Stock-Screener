@@ -1,6 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import StockChart from "./StockChart";
+import { getHistoricalData } from "../services/stockApi";
 
 const StockModal = ({ stock, onClose }) => {
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(()=>{
+    if (!stock) return;
+    let isMounted = true;
+
+    const loadChart = async()=>{
+      try{
+        const data = await getHistoricalData(stock.symbol);
+        const formated = data.c.map((price,i)=>({
+          price,
+          date: new Date(data.t[i]*1000).toLocaleDateString()
+        }));
+
+        if (isMounted) setChartData(formated);
+      }catch(err){
+        console.log(err);
+        if (isMounted) setChartData([]);
+      }
+    };
+
+    loadChart();
+
+    return () => {
+      isMounted = false;
+    };
+  },[stock]);
+
   if (!stock) return null;
 
   return (
@@ -24,6 +54,7 @@ const StockModal = ({ stock, onClose }) => {
             <span className={`ml-2 ${stock.change > 0 ? "text-green-400" : "text-red-400"}`}>{stock.change?.toFixed(2)}%</span>
           </p>
         </div>
+        <StockChart data={chartData} />
       </div>
     </div>
   );

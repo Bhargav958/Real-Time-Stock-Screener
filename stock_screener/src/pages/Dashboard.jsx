@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar'
 import StockTable from '../components/StockTable'
 import SearchBar from '../components/SearchBar'
 import StockModal from '../components/StockModel'
+import StockChart from '../components/StockChart'
 import { getStockQuote } from '../services/stockApi'
 
 const defaultStocks =["AAPL","TSLA","MSFT","NVDA"];
@@ -95,6 +96,7 @@ const Dashboard = () => {
             <p className='text-zinc-400 mb-4 text-sm'>Updated: <span className='font-medium text-white ml-2'>{lastupd || "Never"}</span></p>
             <StockTable stocks={stk} onSelect={setSelected} />
             <StockModal stock={selected} onClose={()=>setSelected(null)}/>
+            
         </div>
     </div>
   )
