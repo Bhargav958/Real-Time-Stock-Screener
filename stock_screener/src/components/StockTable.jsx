@@ -1,9 +1,9 @@
+import LoadingSkeleton from "./LoadingSkeleton";
+
 const StockTable = ({stocks, loading, error, retryLoad, onSelect, watchlist, toggleWatchlist}) => {
   if(loading){
     return(
-      <div className='text-white p-6'>
-        Loading...
-        </div>
+      <LoadingSkeleton />
     );
   }
 
