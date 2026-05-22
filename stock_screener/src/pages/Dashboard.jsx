@@ -15,6 +15,7 @@ const Dashboard = () => {
     const [error, setError] = useState(null);
     const [lastupd, setLastupd] = useState(null);
     const [selected, setSelected] = useState(null);
+    const [filter, setFilter] = useState("ALL");
     const [watchlist,  setWatchlist] = useState(()=>{
         const saved = localStorage.getItem("watchlist");
         return saved? JSON.parse(saved) : [];
@@ -129,7 +130,23 @@ const Dashboard = () => {
         }
     }
 
-    const watchStocks= stk.filter(s=>watchlist.includes(s.symbol));
+    const watchStocks = stk.filter(s=>watchlist.includes(s.symbol));
+
+    const filteredStocks =
+        stk.filter(stock=>{
+        if(filter==="FAV")
+            return watchlist.includes(stock.symbol);
+
+        if(filter==="GAINERS")
+            return stock.change > 0;
+        
+        if(filter==="LOSERS")
+            return stock.change < 0;
+        
+        if(filter==="PRICE")
+            return stock.price > 100;
+        return true;
+    });
 
   return (
     <div>
@@ -139,7 +156,14 @@ const Dashboard = () => {
             <SearchBar onSearch={handleSearch} />
             <p className='text-zinc-400 mb-4 text-sm'>Updated: <span className='font-medium text-white ml-2'>{lastupd || "Never"}</span></p>
             <Watchlist stocks={watchStocks} onSelect={setSelected} toggleWatchlist={toggleWatchlist}/>
-            <StockTable stocks={stk} loading={loading} error={error} retryLoad={retryLoad} onSelect={setSelected} watchlist={watchlist} toggleWatchlist={toggleWatchlist}/>
+            <div className='flex gap-3 mb-6 flex-wrap'>
+                <button onClick={()=>setFilter("ALL")}className={`px-4 py-2 rounded ${filter==="ALL"?"bg-green-500":"bg-zinc-800"} text-white`}>All</button>
+                <button onClick={()=>setFilter("FAV")}className={`px-4 py-2 rounded ${filter==="ALL"?"bg-green-500":"bg-zinc-800"} text-white`}>⭐ Favorites</button>
+                <button onClick={()=>setFilter("GAINERS")} className={`px-4 py-2 rounded ${filter==="ALL"?"bg-green-500":"bg-zinc-800"} text-white`}>📈 Gainers</button>
+                <button onClick={()=>setFilter("LOSERS")} className={`px-4 py-2 rounded ${filter==="ALL"?"bg-green-500":"bg-zinc-800"} text-white`}>📉 Losers</button>
+                <button onClick={()=>setFilter("PRICE")} className={`px-4 py-2 rounded ${filter==="ALL"?"bg-green-500":"bg-zinc-800"} text-white`}>💰 Price {'>'}100</button>
+            </div>
+            <StockTable stocks={filteredStocks} loading={loading} error={error} retryLoad={retryLoad} onSelect={setSelected} watchlist={watchlist} toggleWatchlist={toggleWatchlist}/>
             <StockModal stock={selected} onClose={()=>setSelected(null)}/>
             
         </div>
