@@ -67,3 +67,24 @@ export const getHistoricalData = async(symbol, timeframe="1M")=>{
         throw err;
     }
 };
+
+export  const getStockNews = async(symbol)=>{
+    try{
+        const today = new Date();
+        const from = new Date(today.getTime() - 7*24*60*60*1000);
+        const res = await axios.get(`${BASE_URL}/company-news`,{
+                params:{symbol, from: from
+                                    .toISOString()
+                                    .split("T")[0],
+                                to: today
+                                    .toISOString()
+                                    .split("T")[0], token: API_KEY
+                }
+            }
+        );
+        return res.data;
+    }catch(err){
+        console.log(err);
+        return [];
+    }
+}
