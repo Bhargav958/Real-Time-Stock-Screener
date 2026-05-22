@@ -1,26 +1,52 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import StockChart from "./StockChart";
 import { getHistoricalData } from "../services/stockApi";
 
 const StockModal = ({ stock, onClose }) => {
   const [chartData, setChartData] = useState([]);
+  const [chartLoading, setChartLoading] = useState(false);
+  const [chartError, setChartError] = useState(null);
 
   useEffect(()=>{
     if (!stock) return;
     let isMounted = true;
 
     const loadChart = async()=>{
+      if (isMounted) {
+        setChartData([]);
+        setChartLoading(true);
+        setChartError(null);
+      }
+
       try{
         const data = await getHistoricalData(stock.symbol);
-        const formated = data.c.map((price,i)=>({
-          price,
-          date: new Date(data.t[i]*1000).toLocaleDateString()
-        }));
+        if(data?.s !== "ok" || !Array.isArray(data.c) || !Array.isArray(data.t)){
+          if (isMounted) {
+            setChartData([]);
+            setChartError("No chart data available for this symbol");
+            setChartLoading(false);
+          }
+          return;
+        }
+        const formated = data.c
+          .map((price,i)=>({
+            price: Number(price),
+            date: new Date(data.t[i]*1000).toLocaleDateString("en-us", {month:"short", day:"numeric"})
+          }))
+          .filter((point)=>Number.isFinite(point.price) && point.date !== "Invalid Date");
 
-        if (isMounted) setChartData(formated);
+        if (isMounted) {
+          setChartData(formated);
+          setChartError(formated.length ? null : "No chart data available for this symbol");
+          setChartLoading(false);
+        }
       }catch(err){
         console.log(err);
-        if (isMounted) setChartData([]);
+        if (isMounted) {
+          setChartData([]);
+          setChartError("Failed to load chart data");
+          setChartLoading(false);
+        }
       }
     };
 
@@ -54,7 +80,17 @@ const StockModal = ({ stock, onClose }) => {
             <span className={`ml-2 ${stock.change > 0 ? "text-green-400" : "text-red-400"}`}>{stock.change?.toFixed(2)}%</span>
           </p>
         </div>
-        <StockChart data={chartData} />
+        {chartLoading ? (
+          <div className='w-full h-48 md:h-64 mt-6 flex items-center justify-center text-sm text-zinc-400'>
+            Loading chart...
+          </div>
+        ) : chartError ? (
+          <div className='w-full h-48 md:h-64 mt-6 flex items-center justify-center text-sm text-zinc-400'>
+            {chartError}
+          </div>
+        ) : (
+          <StockChart data={chartData} />
+        )}
       </div>
     </div>
   );

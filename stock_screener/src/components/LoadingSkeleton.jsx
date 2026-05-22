@@ -1,5 +1,3 @@
-import React from 'react'
-
 const LoadingSkeleton = () => {
   return (
     <div className='border border-zinc-800 rounded-xl overflow-hidden'>

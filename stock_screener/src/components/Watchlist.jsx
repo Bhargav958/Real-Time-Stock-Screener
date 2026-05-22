@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Watchlist = ({stocks, onSelect, toggleWatchlist}) => {
   if(!stocks.length)return null;
   return (

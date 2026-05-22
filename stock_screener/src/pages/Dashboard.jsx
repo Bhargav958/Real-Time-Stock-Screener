@@ -3,7 +3,6 @@ import Navbar from '../components/Navbar'
 import StockTable from '../components/StockTable'
 import SearchBar from '../components/SearchBar'
 import StockModal from '../components/StockModel'
-import StockChart from '../components/StockChart'
 import Watchlist from '../components/Watchlist'
 import { getStockQuote } from '../services/stockApi'
 
@@ -26,8 +25,7 @@ const Dashboard = () => {
         return{
             symbol,
             price: data.c,
-            prevPrice:
-                stk.find(s=>s.symbol===symbol)?.price || data.c,
+            prevPrice: data.c,
             change: data.dp,
         };
     }, []);
@@ -71,7 +69,6 @@ const Dashboard = () => {
     }
 
     useEffect(()=>{
-        setError(null);
         let isMounted = true;
 
         Promise.all(defaultStocks.map(fetchStock))
