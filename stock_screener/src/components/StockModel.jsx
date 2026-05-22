@@ -35,14 +35,14 @@ const StockModal = ({ stock, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50">
-      <div className="bg-zinc-900 p-8 rounded-xl w-[400px] border border-zinc-700">
+      <div className="bg-zinc-900 p-5 md:p-8 rounded-xl w-[95%] max-w-[400px] border border-zinc-700">
         <button
           onClick={onClose}
           className=" float-right text-zinc-400">
           ✕
         </button>
 
-        <h2 className= "text-3xl text-white font-bold mb-6">{stock.symbol}</h2>
+        <h2 className= "text-2xl md:text-3xl text-white font-bold mb-6">{stock.symbol}</h2>
         <div className="text-white space-y-4">
           <p>
             Price:

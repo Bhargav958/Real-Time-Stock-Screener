@@ -14,7 +14,7 @@ const SearchBar = ({ onSearch }) => {
   const filtered=suggestions.filter(s=>s.includes(symbol.toUpperCase())).slice(0,5);
 
   return (
-    <form onSubmit={handleSymbol} className='relative flex gap-4 mb-6'>
+    <form onSubmit={handleSymbol} className='relative flex flex-col md:flex-row gap-4 mb-6'>
       <input type="text" value={symbol} placeholder='Search stock' onChange={(e)=>setSymbol(e.target.value)} 
         className='flex-1 bg-zinc-800 text-white px-4 py-3 rounded-lg outline-none'
       />  
@@ -27,7 +27,7 @@ const SearchBar = ({ onSearch }) => {
           </div>
         )
       }
-      <button className='bg-green-500 px-6 rounded-lg text-white'>Search</button>
+      <button className='bg-green-500 px-6 py-3 rounded-lg text-white'>Search</button>
     </form>
   )
 }

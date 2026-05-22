@@ -152,7 +152,7 @@ const Dashboard = () => {
     <div>
         <Navbar />
 
-        <div className='p-6'>
+        <div className='p-4 md:p-6'>
             <SearchBar onSearch={handleSearch} />
             <p className='text-zinc-400 mb-4 text-sm'>Updated: <span className='font-medium text-white ml-2'>{lastupd || "Never"}</span></p>
             <Watchlist stocks={watchStocks} onSelect={setSelected} toggleWatchlist={toggleWatchlist}/>
