@@ -6,6 +6,7 @@ const StockModal = ({ stock, onClose }) => {
   const [chartData, setChartData] = useState([]);
   const [chartLoading, setChartLoading] = useState(false);
   const [chartError, setChartError] = useState(null);
+  const [timeframe, setTimeframe] = useState("1M");
 
   useEffect(()=>{
     if (!stock) return;
@@ -19,7 +20,7 @@ const StockModal = ({ stock, onClose }) => {
       }
 
       try{
-        const data = await getHistoricalData(stock.symbol);
+        const data = await getHistoricalData(stock.symbol, timeframe);
         if(data?.s !== "ok" || !Array.isArray(data.c) || !Array.isArray(data.t)){
           if (isMounted) {
             setChartData([]);
@@ -55,7 +56,7 @@ const StockModal = ({ stock, onClose }) => {
     return () => {
       isMounted = false;
     };
-  },[stock]);
+  },[stock, timeframe]);
 
   if (!stock) return null;
 
@@ -89,7 +90,14 @@ const StockModal = ({ stock, onClose }) => {
             {chartError}
           </div>
         ) : (
-          <StockChart data={chartData} />
+          <div className="flex-col gap-2 mt-6 mb-4">
+            {
+            ["1D","1W","1M","1Y"]
+              .map((t) => (
+                <button key={t} onClick={() => setTimeframe(t)} className={`px-3 py-1 rounded ${timeframe===t ?"bg-green-500":"bg-zinc-700"} text-white`}>{t}</button>
+            ))}
+            <StockChart data={chartData} />
+          </div>
         )}
       </div>
     </div>

@@ -22,10 +22,21 @@ export const getStockQuote = async(symbol)=>{
     }
 };
 
-export const getHistoricalData = async(symbol, resolution="D")=>{
+export const getHistoricalData = async(symbol, timeframe="1M")=>{
     try {
         const now = Math.floor(Date.now()/1000);
-        const from = now -(30*24*60*60);
+        // const from = now -(30*24*60*60);
+        let from;
+        let resolution="D";
+        if(timeframe==="1D"){
+            from = now-(24*60*60);
+            resolution="15";
+        }else if(timeframe==="1W")
+            from = now-(7*24*60*60);
+        else if(timeframe==="1M")
+            from = now-(30*24*60*60);
+        else
+            from = now-(365*24*60*60)
         let data = null;
 
         try {
