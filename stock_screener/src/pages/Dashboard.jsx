@@ -4,9 +4,24 @@ import StockTable from '../components/StockTable'
 import SearchBar from '../components/SearchBar'
 import StockModal from '../components/StockModel'
 import Watchlist from '../components/Watchlist'
+import Portfolio from '../components/Portfolio'
 import { getStockQuote } from '../services/stockApi'
 
 const defaultStocks =["AAPL","TSLA","MSFT","NVDA"];
+
+const getSavedArray = (key) => {
+    try {
+        const saved = localStorage.getItem(key);
+        if (!saved || saved === "undefined") return [];
+
+        const parsed = JSON.parse(saved);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (err) {
+        console.warn(`Ignoring invalid ${key} in localStorage`, err);
+        localStorage.removeItem(key);
+        return [];
+    }
+};
 
 const Dashboard = () => {
     const [stk, setStk] = useState([]);
@@ -16,8 +31,10 @@ const Dashboard = () => {
     const [selected, setSelected] = useState(null);
     const [filter, setFilter] = useState("ALL");
     const [watchlist,  setWatchlist] = useState(()=>{
-        const saved = localStorage.getItem("watchlist");
-        return saved? JSON.parse(saved) : [];
+        return getSavedArray("watchlist");
+    });
+    const [portfolio, setPortfolio] = useState(()=>{
+        return getSavedArray("portfolio");
     });
 
     const fetchStock = useCallback(async(symbol)=>{
@@ -103,6 +120,10 @@ const Dashboard = () => {
         localStorage.setItem("watchlist", JSON.stringify(watchlist));
     },[watchlist]);
 
+    useEffect(()=>{ //for portfolio
+        localStorage.setItem("portfolio", JSON.stringify(portfolio));
+    },[portfolio]);
+
     const handleSearch= async (symbol)=>{
         try{
             const st = await fetchStock(symbol);
@@ -125,6 +146,14 @@ const Dashboard = () => {
         } else{
             setWatchlist([...watchlist, symbol]);
         }
+    }
+
+    const addPortfolio = (symbol) => {
+        const shares = Number(prompt("Enter shares: "));
+        const buyPrice = Number(prompt("Average buy price: "));
+        if (!shares || !buyPrice) return;
+
+        setPortfolio(prev => [...prev, { symbol, shares, buyPrice }]);
     }
 
     const watchStocks = stk.filter(s=>watchlist.includes(s.symbol));
@@ -150,17 +179,18 @@ const Dashboard = () => {
         <Navbar />
 
         <div className='p-4 md:p-6'>
+            <Portfolio portfolio={portfolio} stocks={stk} />
             <SearchBar onSearch={handleSearch} />
             <p className='text-zinc-400 mb-4 text-sm'>Updated: <span className='font-medium text-white ml-2'>{lastupd || "Never"}</span></p>
             <Watchlist stocks={watchStocks} onSelect={setSelected} toggleWatchlist={toggleWatchlist}/>
             <div className='flex gap-3 mb-6 flex-wrap'>
                 <button onClick={()=>setFilter("ALL")}className={`px-4 py-2 rounded ${filter==="ALL"?"bg-green-500":"bg-zinc-800"} text-white`}>All</button>
-                <button onClick={()=>setFilter("FAV")}className={`px-4 py-2 rounded ${filter==="ALL"?"bg-green-500":"bg-zinc-800"} text-white`}>⭐ Favorites</button>
-                <button onClick={()=>setFilter("GAINERS")} className={`px-4 py-2 rounded ${filter==="ALL"?"bg-green-500":"bg-zinc-800"} text-white`}>📈 Gainers</button>
-                <button onClick={()=>setFilter("LOSERS")} className={`px-4 py-2 rounded ${filter==="ALL"?"bg-green-500":"bg-zinc-800"} text-white`}>📉 Losers</button>
-                <button onClick={()=>setFilter("PRICE")} className={`px-4 py-2 rounded ${filter==="ALL"?"bg-green-500":"bg-zinc-800"} text-white`}>💰 Price {'>'}100</button>
+                <button onClick={()=>setFilter("FAV")}className={`px-4 py-2 rounded ${filter==="FAV"?"bg-green-500":"bg-zinc-800"} text-white`}>⭐ Favorites</button>
+                <button onClick={()=>setFilter("GAINERS")} className={`px-4 py-2 rounded ${filter==="GAINERS"?"bg-green-500":"bg-zinc-800"} text-white`}>📈 Gainers</button>
+                <button onClick={()=>setFilter("LOSERS")} className={`px-4 py-2 rounded ${filter==="LOSERS"?"bg-green-500":"bg-zinc-800"} text-white`}>📉 Losers</button>
+                <button onClick={()=>setFilter("PRICE")} className={`px-4 py-2 rounded ${filter==="PRICE"?"bg-green-500":"bg-zinc-800"} text-white`}>💰 Price {'>'}100</button>
             </div>
-            <StockTable stocks={filteredStocks} loading={loading} error={error} retryLoad={retryLoad} onSelect={setSelected} watchlist={watchlist} toggleWatchlist={toggleWatchlist}/>
+            <StockTable stocks={filteredStocks} addPortfolio={addPortfolio} loading={loading} error={error} retryLoad={retryLoad} onSelect={setSelected} watchlist={watchlist} toggleWatchlist={toggleWatchlist}/>
             <StockModal stock={selected} onClose={()=>setSelected(null)}/>
             
         </div>

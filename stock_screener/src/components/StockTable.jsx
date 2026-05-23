@@ -1,6 +1,6 @@
 import LoadingSkeleton from "./LoadingSkeleton";
 
-const StockTable = ({stocks, loading, error, retryLoad, onSelect, watchlist, toggleWatchlist}) => {
+const StockTable = ({stocks, addPortfolio, loading, error, retryLoad, onSelect, watchlist, toggleWatchlist}) => {
   if(loading){
     return(
       <LoadingSkeleton />
@@ -33,6 +33,7 @@ const StockTable = ({stocks, loading, error, retryLoad, onSelect, watchlist, tog
                     <th className='p-2 md:p-4'>Symbol</th>
                     <th className='p-2 md:p-4'>Price</th>
                     <th className='p-2 md:p-4'>Change %</th>
+                    <th className='p-2 md:p-4'>Portfolio</th>
                 </tr>
             </thead>
             <tbody>
@@ -65,6 +66,9 @@ const StockTable = ({stocks, loading, error, retryLoad, onSelect, watchlist, tog
                         </td>
                         <td className={`p-2 md:p-4 font-medium ${stk.change >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                             {stk.change == null ? '-' : `${stk.change > 0 ? "↑ " : "↓ " } ${stk.change.toFixed(2)}%`}
+                        </td>
+                        <td className="p-2 md:p-4">
+                            <button onClick={(e)=>{e.stopPropagation(); addPortfolio(stk.symbol);}} className="bg-blue-500 px-3 py-1 rounded text-white">+</button>
                         </td>
                     </tr>
                 ))}
