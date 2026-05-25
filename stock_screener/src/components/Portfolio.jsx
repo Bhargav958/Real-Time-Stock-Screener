@@ -1,3 +1,5 @@
+import {PieChart, Pie, Cell, Tooltip, ResponsiveContainer} from "recharts";
+
 const Portfolio = ({portfolio=[], stocks=[], removePortfolio, editPortfolio}) => {
     const total = portfolio.reduce((sum,item)=>{
         const stock = stocks.find(s=>s.symbol===item.symbol);
@@ -5,10 +7,31 @@ const Portfolio = ({portfolio=[], stocks=[], removePortfolio, editPortfolio}) =>
             return sum;
         return sum + stock.price * item.shares;
     },0);
+
+    const chartData = portfolio.map(item=>{
+        const stock=stocks.find(s=>s.symbol===item.symbol);
+        return{
+            name: item.symbol,
+            value: stock? stock.price*item.shares: 0
+        };
+    });
+
     return (
         <div className='bg-zinc-800 p-5 rounded-xl mb-6'>
             <h2 className='text-white text-xl font-bold mb-4'>Portfolio</h2>
             <p className='text-green-400 text-lg mb-4'>Total: ${total.toFixed(2)}</p>
+            {
+                chartData.length>0 && <div className="h-64 mb-6">
+                    <ResponsiveContainer>
+                        <PieChart>
+                            <Pie data={chartData} dataKey="value" nameKey="name" outerRadius="80" label>{
+                                chartData.map((_,i)=>(
+                                    <Cell key={i} />
+                                ))}</Pie>
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+            }
             {
                 portfolio.length===0 ?(<p className='text-zinc-400'>No holdings</p>):(
                       portfolio.map(item=>{
