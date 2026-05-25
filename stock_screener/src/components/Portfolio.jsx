@@ -1,4 +1,4 @@
-const Portfolio = ({portfolio=[], stocks=[]}) => {
+const Portfolio = ({portfolio=[], stocks=[], removePortfolio, editPortfolio}) => {
     const total = portfolio.reduce((sum,item)=>{
         const stock = stocks.find(s=>s.symbol===item.symbol);
         if(!stock)
@@ -14,10 +14,27 @@ const Portfolio = ({portfolio=[], stocks=[]}) => {
                       portfolio.map(item=>{
                         const stock = stocks.find(s=>s.symbol===item.symbol);
                         return(
-                            <div key={item.symbol} className='flex justify-between py-2 border-b border-zinc-700 text-white' >
-                                <span>{item.symbol}</span>
-                                <span>{item.shares} shares</span>
-                                <span>${stock ? (stock.price * item.shares).toFixed(2) : "0"}</span>
+                            <div key={item.symbol} className='py-3 border-b border-zinc-700 text-white' >
+                                <div className="flex justify-between items-center">
+                                    <span>{item.symbol}</span>
+                                    <span className="ml-4">{item.shares} shares</span>
+                                </div>
+                                <div className="flex gap-3">
+                                    <button onClick={()=>editPortfolio(item.symbol)} className="text-blue-400 hover:text-blue-300">✎</button>
+                                    <button onClick={()=>removePortfolio(item.symbol)} className="text-red-400 hover:text-red-300">✕</button>
+                                </div>
+                                <div>
+                                    <span>Buy: ${item.buyPrice}</span>
+                                    <span>Current: ${stock? stock.price.toFixed(2): "0"}</span>
+                                </div>    
+                                    {/* <span>${stock ? (stock.price * item.shares).toFixed(2) : "0"}</span> */}
+                                {
+                                    stock && <div className={`mt-2 font-medium ${
+                                        ((stock.price-item.buyPrice)*item.shares)>=0? "text-green-400":"text-red-400"
+                                    }`}>
+                                        Profit: ${((stock.price-item.buyPrice)*item.shares).toFixed(2)}
+                                    </div>
+                                }
                             </div>
                         )
                     })

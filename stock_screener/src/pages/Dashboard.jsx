@@ -156,6 +156,18 @@ const Dashboard = () => {
         setPortfolio(prev => [...prev, { symbol, shares, buyPrice }]);
     }
 
+    const removePortfolio = (symbol) => {
+        setPortfolio(prev=>prev.filter(item=>item.symbol!==symbol));
+    }
+
+    const editPortfolio = (symbol) => {
+        const shares = Number(prompt("Enter shares: "));
+        const buyPrice = Number(prompt("Average buy price: "));
+        if (!shares || !buyPrice) return;
+
+        setPortfolio(prev=>prev.map(item=>item.symbol===symbol? {...item, shares, buyPrice} : item))
+    }
+
     const watchStocks = stk.filter(s=>watchlist.includes(s.symbol));
 
     const filteredStocks =
@@ -179,8 +191,8 @@ const Dashboard = () => {
         <Navbar />
 
         <div className='p-4 md:p-6'>
-            <Portfolio portfolio={portfolio} stocks={stk} />
-            <SearchBar onSearch={handleSearch} />
+            <Portfolio portfolio={portfolio} stocks={stk} removePortfolio={removePortfolio} editPortfolio={editPortfolio} />
+            <SearchBar onSearch={handleSearch} /> 
             <p className='text-zinc-400 mb-4 text-sm'>Updated: <span className='font-medium text-white ml-2'>{lastupd || "Never"}</span></p>
             <Watchlist stocks={watchStocks} onSelect={setSelected} toggleWatchlist={toggleWatchlist}/>
             <div className='flex gap-3 mb-6 flex-wrap'>
