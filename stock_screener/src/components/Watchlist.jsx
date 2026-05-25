@@ -1,5 +1,12 @@
 const Watchlist = ({stocks, onSelect, toggleWatchlist}) => {
-  if(!stocks.length)return null;
+  if(!stocks.length){
+    return (
+      <div className="mb-8">
+        <h2 className="text-xl font-bold text-white mb-4">⭐ Watchlist</h2>
+        <div className="bg-zinc-800 rounded-xl p-6 text-zinc-400 text-center">No favorites yet<br/>Add stocks using ⭐</div>
+      </div>
+    );
+  }
   return (
     <div className='mb-8'>
       <h2 className='text-xl font-bold text-white mb-4'>⭐ Watchlist</h2>

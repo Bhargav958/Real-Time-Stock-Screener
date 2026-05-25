@@ -33,7 +33,7 @@ const Portfolio = ({portfolio=[], stocks=[], removePortfolio, editPortfolio}) =>
                 </div>
             }
             {
-                portfolio.length===0 ?(<p className='text-zinc-400'>No holdings</p>):(
+                portfolio.length===0 ?(<p className='text-zinc-400 text-center py-6'>📊 No holdings yet<br/>Add stocks to track performance</p>):(
                       portfolio.map(item=>{
                         const stock = stocks.find(s=>s.symbol===item.symbol);
                         return(

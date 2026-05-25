@@ -1,6 +1,6 @@
 import LoadingSkeleton from "./LoadingSkeleton";
 
-const StockTable = ({stocks, addPortfolio, loading, error, retryLoad, onSelect, watchlist, toggleWatchlist}) => {
+const StockTable = ({stocks, addAlert, addPortfolio, loading, error, retryLoad, onSelect, watchlist, toggleWatchlist}) => {
   if(loading){
     return(
       <LoadingSkeleton />
@@ -18,8 +18,8 @@ const StockTable = ({stocks, addPortfolio, loading, error, retryLoad, onSelect, 
 
   if (!stocks || !stocks.length) {
     return (
-      <div className='overflow-x-auto rounded-xl border border-zinc-800'>
-        <p className="text-white">No stocks found</p>
+      <div className='bg-zinc-800 rounded-xl p-8 text-center text-zinc-400'>
+        🔍 No matching stocks <br/> Try another search or filter
       </div>
     );
   }
@@ -34,6 +34,7 @@ const StockTable = ({stocks, addPortfolio, loading, error, retryLoad, onSelect, 
                     <th className='p-2 md:p-4'>Price</th>
                     <th className='p-2 md:p-4'>Change %</th>
                     <th className='p-2 md:p-4'>Portfolio</th>
+                    <th className='p-2 md:p-4'>Alert</th>
                 </tr>
             </thead>
             <tbody>
@@ -69,6 +70,9 @@ const StockTable = ({stocks, addPortfolio, loading, error, retryLoad, onSelect, 
                         </td>
                         <td className="p-2 md:p-4">
                             <button onClick={(e)=>{e.stopPropagation(); addPortfolio(stk.symbol);}} className="bg-blue-500 px-3 py-1 rounded text-white">+</button>
+                        </td>
+                        <td className="p-2 md:p-4">
+                            <button onClick={(e)=>{e.stopPropagation(); addAlert(stk.symbol)}} className="text-yellow-400">🔔</button>
                         </td>
                     </tr>
                 ))}
