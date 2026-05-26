@@ -2,7 +2,7 @@ import {useCallback, useEffect, useState} from 'react'
 import Navbar from '../components/Navbar'
 import StockTable from '../components/StockTable'
 import SearchBar from '../components/SearchBar'
-import StockModal from '../components/StockModel'
+import StockModel from '../components/StockModel'
 import Watchlist from '../components/Watchlist'
 import Portfolio from '../components/Portfolio'
 import { getStockQuote } from '../services/stockApi'
@@ -221,7 +221,7 @@ const Dashboard = () => {
                 <button onClick={()=>setFilter("PRICE")} className={`px-4 py-2 rounded ${filter==="PRICE"?"bg-green-500":"bg-zinc-800"} text-white`}>💰 Price {'>'}100</button>
             </div>
             <StockTable stocks={filteredStocks} addAlert={addAlert} addPortfolio={addPortfolio} loading={loading} error={error} retryLoad={retryLoad} onSelect={setSelected} watchlist={watchlist} toggleWatchlist={toggleWatchlist}/>
-            <StockModal stock={selected} onClose={()=>setSelected(null)}/>
+            <StockModel stock={selected} onClose={()=>setSelected(null)}/>
             
         </div>
     </div>
